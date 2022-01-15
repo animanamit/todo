@@ -1,5 +1,7 @@
 import { nanoid } from "nanoid";
 import { useState, ChangeEvent, KeyboardEvent } from "react";
+import { motion } from "framer-motion";
+
 // import Task from "./task.component";
 
 type ListViewProps = {
@@ -51,8 +53,13 @@ export const ListView = ({ tasks, setTasks }: ListViewProps) => {
     setTasks((tasks) => tasks.filter((task) => task.id !== deleteTask.id));
   }
 
+  const animatedTask = {
+    hidden: { opacity: 0, y: -100 },
+    show: { opacity: 1, y: 0 },
+  };
+
   return (
-    <div>
+    <div className="bg-lime-100 w-fit p-20 m-auto rounded-2xl">
       <span className="block text-sm font-medium text-gray-700">
         Add a new task
       </span>
@@ -67,10 +74,16 @@ export const ListView = ({ tasks, setTasks }: ListViewProps) => {
         invalid:border-pink-500 invalid:text-pink-600
         focus:invalid:border-pink-500 focus:invalid:ring-pink-500"
       />
-      <button onClick={handleClearTasks}>Clear</button>
+
       <div>
         {tasks.map((task) => (
-          <div className="m-1 p-1" key={task.id}>
+          <motion.div
+            variants={animatedTask}
+            initial="hidden"
+            animate="show"
+            className="m-1 p-1"
+            key={task.id}
+          >
             <input
               type="checkbox"
               checked={task.isComplete}
@@ -85,9 +98,10 @@ export const ListView = ({ tasks, setTasks }: ListViewProps) => {
             >
               Delete
             </button>
-          </div>
+          </motion.div>
         ))}
       </div>
+      <button onClick={handleClearTasks}>Clear</button>
     </div>
   );
 };
